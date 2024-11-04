@@ -16,6 +16,7 @@
   border: 1px solid rgb(218, 218, 218);
   border-radius: 15px;
   padding: 25px 20px;
+  padding-bottom: 20px;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(213, 210, 210, 0.359);
 }
@@ -35,12 +36,15 @@
 .apartment-form-body > div {
   margin-bottom: 15px;
 }
+.apartment-form-body .form-buttons {
+  margin: 0 !important;
+}
 .posting-apartment-images {
   width: 100%;
   display: flex;
   align-items: center;
   margin-bottom: 15px;
-  padding: 18px 0;
+  padding: 10px 0;
   border-bottom: 1px solid rgb(218, 218, 218);
   flex-wrap: wrap;
   gap: 10px;
@@ -70,6 +74,31 @@
 .posting-apartment-image:hover .delete-btn {
   display: flex;
   transition: display 1s;
+}
+.option {
+  position: absolute;
+  padding: 3px 0;
+  top: 102%;
+  left: 0;
+  right: 0;
+  z-index: 55;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  list-style: none;
+  border: 1.4px solid rgb(162, 162, 162);
+  color: rgb(71, 68, 68);
+}
+.option li {
+  padding: 7px;
+  margin: 3px 0;
+  cursor: pointer;
+  font-weight: 500;
+  border-left: 2px solid #fff;
+}
+.option li:hover {
+  background-color: rgb(228, 255, 255);
+  border-left: 2px solid blueviolet;
+  color: blueviolet;
 }
 .delete-btn button {
   position: absolute;
@@ -152,6 +181,24 @@
   align-items: center;
   justify-content: center;
   padding: 5px;
+}
+.uploading-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 55;
+}
+.uploading-loader h2 {
+  margin-top: 10px;
 }
 
 @media (max-width: 900px) {

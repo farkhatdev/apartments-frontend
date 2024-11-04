@@ -18,6 +18,7 @@
 .app {
   min-height: 100dvh;
   position: relative;
+  background-color: #f9f6ff;
 }
 .container {
   width: 95%;
@@ -27,9 +28,25 @@ a {
   text-decoration: none;
   color: rgb(110, 109, 109);
 }
-.step {
+button {
+  border: none;
+  background-color: transparent;
+}
+.steps {
+  width: 90%;
+  display: grid;
+  gap: 10px;
   position: absolute;
-  top: 5px;
-  right: 8px;
-  font-weight: 600;
+  top: 10px;
+  left: 50%;
+  grid-template-columns: repeat(3, 1fr);
+  transform: translateX(-50%);
+}
+.step {
+  height: 5px;
+  background-color: rgb(168, 255, 185);
+  border-radius: 10px;
+}
+.step.active {
+  background-color: rgb(16, 250, 16);
 }

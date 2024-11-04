@@ -3,34 +3,33 @@ import "./navbar.css";
 import { LuMenu } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch, useSelector } from "react-redux";
+import LogoImg from "../../utils/images/logo2.png";
+import { useDispatch } from "react-redux";
 import { setSidebar } from "../../store/slices/uiSlice";
 import { setAuthenticated } from "../../store/slices/authSlice";
 
-const Navbar = ({ setIsAuthenticated, setSidebarActive }) => {
+const Navbar = () => {
   const accessToken = localStorage.getItem("access-token");
   const decoded = jwtDecode(accessToken);
   const { phone, name } = decoded;
   const dispatch = useDispatch();
-  const sidebar = useSelector((state) => state.ui.sidebar);
 
   return (
     <nav className="navbar">
       <div className="container">
         <div className="nav-width">
           <div className="nav-left">
-            <div
+            <button
               className="sidebar-menu-icon"
-              onClick={() => dispatch(setSidebar(!sidebar.isActive))}
+              onClick={() => {
+                dispatch(setSidebar(true));
+              }}
             >
               <LuMenu size={28} color="blueviolet" />
-            </div>
+            </button>
             <div className="logo-img">
               <Link to={"/apartments"}>
-                <img
-                  src="https://storage.googleapis.com/apartments-d014c.appspot.com/998999542003/1729628031566-logo%20(2).png"
-                  alt=""
-                />
+                <img src={LogoImg} alt="" />
               </Link>
             </div>
           </div>
@@ -56,16 +55,11 @@ const Navbar = ({ setIsAuthenticated, setSidebarActive }) => {
             <Link to={"/profile"}>
               <div className="profile">
                 <div className="profile-img">
-                  <img
-                    src="https://www.pngitem.com/pimgs/m/404-4042710_circle-profile-picture-png-transparent-png.png"
-                    width={45}
-                    height={45}
-                    alt=""
-                  />
+                  <h1>{name.at(0)}</h1>
                 </div>
                 <div className="profile-info">
                   <h4 className="profile-name">{name}</h4>
-                  <p>{phone}</p>
+                  <p>+{phone}</p>
                 </div>
               </div>
             </Link>

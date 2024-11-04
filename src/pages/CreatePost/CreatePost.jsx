@@ -1,22 +1,35 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./createPost.css";
 import { MdDelete } from "react-icons/md";
 import personSvg from "../../utils/icons/person-svg.svg";
-import emailSvg from "../../utils/icons/email.svg";
+import clockSvg from "../../utils/icons/clock.svg";
+import phoneSvg from "../../utils/icons/phone.svg";
+import priceSvg from "../../utils/icons/price.svg";
+import roomsSvg from "../../utils/icons/rooms.svg";
+import addressSvg from "../../utils/icons/address.svg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAlert } from "../../store/slices/uiSlice";
 import { YMaps, Map, Placemark } from "react-yandex-maps";
+import { ClockLoader } from "react-spinners";
+import { Navigate } from "react-router-dom";
 
 const CreatePost = () => {
-  const dispatch = useDispatch();
-  const inputImgRef = useRef();
+  // States
   const [images, setImages] = useState([]);
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [place, setPlace] = useState([42.442987, 59.617839]);
-  let localURL = "http://localhost:8080";
-  // let url = "https://apartment-gr2i0orv.b4a.run";
-  const accessToken = localStorage.getItem("access-token");
-  const [step, setStep] = useState(2);
+  const [activeOptionForWhom, setActiveOptionForWhom] = useState(false);
+  const [activeOptionDuration, setOptionDuration] = useState(false);
+  const [optionsDuration] = useState(["Uzaq muddetli", "Kunlik"]);
+  const [step, setStep] = useState(1);
+  const [optionsForWhom] = useState([
+    "Student ballar",
+    "Student qizlar",
+    "Semeyniy",
+  ]);
+
   const [form, setForm] = useState({
     shortAddress: "",
     fullAddress: "",
@@ -26,13 +39,45 @@ const CreatePost = () => {
     duration: "",
     phone1: "",
     phone2: "",
+    condition: "",
+    place,
+    id: 145,
+    owner: "124",
   });
+  const accessToken = localStorage.getItem("access-token");
+  let localURL = "http://localhost:8080";
+  // Refs
+  const inputImgRef = useRef();
+  const forWhomRef = useRef();
+  const durationRef = useRef();
+  const durationInputRef = useRef();
+  const forWhomInputRef = useRef();
 
+  // Handlers
+  //  1
+  const handleClickOutside = (event) => {
+    if (
+      forWhomRef.current &&
+      !forWhomRef.current.contains(event.target) &&
+      !forWhomInputRef.current.contains(event.target)
+    ) {
+      setActiveOptionForWhom(false);
+    }
+    if (
+      durationRef.current &&
+      !durationRef.current.contains(event.target) &&
+      !durationInputRef.current.contains(event.target)
+    ) {
+      setOptionDuration(false);
+    }
+  };
+  //  2
   const handleChange = (e) => {
     let value = e.target.value;
     let name = e.target.name;
     const lastLetter = value.at(value.length - 1);
     const regex = /^[0-9]*$/;
+    if (name === "forWhom" || name === "duration") return;
     if (name === "phone1" || name === "phone2") {
       if (!regex.test(lastLetter)) return;
       let phoneNum = String(e.target.value);
@@ -51,6 +96,8 @@ const CreatePost = () => {
       });
     }
   };
+
+  //  3
   const clearData = () => {
     setImages([]);
     setForm({
@@ -65,15 +112,37 @@ const CreatePost = () => {
     });
   };
 
+  //  4
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (step === 1) {
-        if (images.length <= 1) return alert("en kemi 3 photo");
+        if (images.length < 3)
+          return dispatch(
+            setAlert({
+              message: "En kemi 3 foto saylan",
+              type: "error",
+              active: true,
+            })
+          );
+        const isObjectValid = (obj) => {
+          for (let key in obj) {
+            if (
+              obj[key] === null ||
+              obj[key] === undefined ||
+              obj[key] === ""
+            ) {
+              return false;
+            }
+          }
+          return true;
+        };
+        if (!isObjectValid(form)) return;
         setStep(2);
       } else if (step === 2) {
         setStep(3);
       } else if (step === 3) {
+        setLoading(true);
         const formData = new FormData();
         images.map((image) => formData.append("images", image));
         formData.append("info", JSON.stringify(form));
@@ -83,7 +152,6 @@ const CreatePost = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(response);
         dispatch(
           setAlert({
             message: response?.data?.message,
@@ -91,11 +159,13 @@ const CreatePost = () => {
             active: true,
           })
         );
+        setLoading(false);
         clearData();
+        setStep(1);
+        <Navigate to={"/apartments"} />;
       }
     } catch (error) {
-      console.log(error?.response);
-
+      setStep(1);
       dispatch(
         setAlert({
           message: error?.response?.data?.message || "Error",
@@ -106,16 +176,32 @@ const CreatePost = () => {
     }
   };
 
+  // Hooks
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="create-post page">
       <div className="container">
         <div className="create-post-inner">
           <div className="create-post-wrapper">
-            <span className="step">{step} / 3</span>
+            <div className="steps">
+              <div className={`step ${step >= 1 ? "active" : null}`}></div>
+              <div className={`step ${step >= 2 ? "active" : null}`}></div>
+              <div className={`step ${step >= 3 ? "active" : null}`}></div>
+            </div>
             {step === 1 ? (
               <div className="posting-apartment-images">
                 {images.map((image, index) => {
                   let url = URL.createObjectURL(image);
+                  if (preview === null) setPreview(url);
                   return (
                     <div key={index} className="posting-apartment-image">
                       <img src={url} alt="" width={200} height={200} />
@@ -175,7 +261,7 @@ const CreatePost = () => {
                       <label htmlFor="shortAddress">
                         <img
                           className="form-icon"
-                          src={personSvg}
+                          src={addressSvg}
                           width={18}
                           height={18}
                           alt=""
@@ -188,7 +274,7 @@ const CreatePost = () => {
                         type="text"
                         autoComplete="off"
                         placeholder="27 mikro rayon"
-                        maxLength={20}
+                        maxLength={30}
                         minLength={5}
                         value={form.shortAddress}
                         onChange={handleChange}
@@ -199,7 +285,7 @@ const CreatePost = () => {
                       <label htmlFor="fullAddress">
                         <img
                           className="form-icon"
-                          src={emailSvg}
+                          src={addressSvg}
                           width={18}
                           height={18}
                           alt=""
@@ -234,18 +320,38 @@ const CreatePost = () => {
                         id="forWhom"
                         name="forWhom"
                         type="text"
+                        ref={forWhomInputRef}
                         autoComplete="off"
                         placeholder="Student ballar"
                         value={form.forWhom}
                         onChange={handleChange}
                         required
+                        onFocus={() => setActiveOptionForWhom(true)}
                       />
+                      {activeOptionForWhom ? (
+                        <ul className="option" ref={forWhomRef}>
+                          {optionsForWhom.map((option) => {
+                            return (
+                              <li
+                                onClick={() => {
+                                  setForm((prev) => {
+                                    return { ...prev, forWhom: option };
+                                  });
+                                  setActiveOptionForWhom(false);
+                                }}
+                              >
+                                {option}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : null}
                     </div>
                     <div className="form-group">
                       <label htmlFor="price">
                         <img
                           className="form-icon"
-                          src={personSvg}
+                          src={priceSvg}
                           width={18}
                           height={18}
                           alt=""
@@ -265,12 +371,56 @@ const CreatePost = () => {
                       />
                     </div>
                     <div className="form-group">
+                      <label htmlFor="duration">
+                        <img
+                          className="form-icon"
+                          src={clockSvg}
+                          width={22}
+                          height={22}
+                          alt=""
+                        />
+                      </label>
+                      <label htmlFor="duration">Muddeti:</label>
+                      <input
+                        id="duration"
+                        name="duration"
+                        type="text"
+                        value={form.duration}
+                        onChange={handleChange}
+                        autoComplete="off"
+                        placeholder="Kunlik yaki ayliq"
+                        onFocus={() => setOptionDuration(true)}
+                        ref={durationInputRef}
+                        required
+                      />
+                      {activeOptionDuration ? (
+                        <ul className="option" ref={durationRef}>
+                          {optionsDuration.map((option) => {
+                            return (
+                              <li
+                                onClick={() => {
+                                  setForm((prev) => {
+                                    return { ...prev, duration: option };
+                                  });
+                                  setOptionDuration(false);
+                                }}
+                              >
+                                {option}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="apartment-post-form-columns">
+                    <div className="form-group">
                       <label htmlFor="rooms">
                         <img
                           className="form-icon"
-                          src={emailSvg}
-                          width={18}
-                          height={18}
+                          src={roomsSvg}
+                          width={21}
+                          height={21}
                           alt=""
                         />
                       </label>
@@ -288,37 +438,13 @@ const CreatePost = () => {
                         required
                       />
                     </div>
-                  </div>
-                  <div className="apartment-post-form-columns">
-                    <div className="form-group">
-                      <label htmlFor="duration">
-                        <img
-                          className="form-icon"
-                          src={personSvg}
-                          width={18}
-                          height={18}
-                          alt=""
-                        />
-                      </label>
-                      <label htmlFor="duration">Muddeti:</label>
-                      <input
-                        id="duration"
-                        name="duration"
-                        type="text"
-                        value={form.duration}
-                        onChange={handleChange}
-                        autoComplete="off"
-                        placeholder="Kunlik yaki ayliq"
-                        required
-                      />
-                    </div>
                     <div className="form-group">
                       <label htmlFor="phone1">
                         <img
                           className="form-icon"
-                          src={emailSvg}
-                          width={18}
-                          height={18}
+                          src={phoneSvg}
+                          width={20}
+                          height={20}
                           alt=""
                         />
                       </label>
@@ -347,9 +473,9 @@ const CreatePost = () => {
                       <label htmlFor="phone2">
                         <img
                           className="form-icon"
-                          src={emailSvg}
-                          width={18}
-                          height={18}
+                          src={phoneSvg}
+                          width={20}
+                          height={20}
                           alt=""
                         />
                       </label>
@@ -375,7 +501,30 @@ const CreatePost = () => {
                       />
                     </div>
                   </div>
-                  <div className="form-btn-group">
+                  <div className="form-group">
+                    <label htmlFor="condition">
+                      <img
+                        className="form-icon"
+                        src={roomsSvg}
+                        width={18}
+                        height={18}
+                        alt=""
+                      />
+                    </label>
+                    <label htmlFor="condition">Sharayatları</label>
+                    <input
+                      className="custom-number-input"
+                      id="condition"
+                      name="condition"
+                      type="text"
+                      value={form.condition}
+                      onChange={handleChange}
+                      autoComplete="off"
+                      placeholder="Kir mashin, xoladelnik, Televizor"
+                      required
+                    />
+                  </div>
+                  <div className="form-btn-group form-buttons">
                     <button type="reset" onClick={clearData}>
                       Clear
                     </button>
@@ -407,7 +556,7 @@ const CreatePost = () => {
                         <Placemark
                           geometry={place}
                           options={{
-                            draggable: true, // Placemarkni sudrab ko'chirish uchun
+                            draggable: true,
                           }}
                           onDragEnd={(e) =>
                             setPlace(e.get("target").geometry.getCoordinates())
@@ -416,7 +565,7 @@ const CreatePost = () => {
                       </Map>
                     </YMaps>
                   </div>
-                  <div className="form-btn-group">
+                  <div className="form-btn-group form-buttons">
                     <button
                       type="button"
                       onClick={() => setStep((prev) => prev - 1)}
@@ -430,17 +579,62 @@ const CreatePost = () => {
             ) : null}
             {step === 3 ? (
               <div className="view-ads-to-verify">
-                <div className="all-informations"></div>
                 <form className="apartment-post-form" onSubmit={handleSubmit}>
+                  {loading ? (
+                    <div className="uploading-loader">
+                      <ClockLoader
+                        color="#8a2be2"
+                        size={100}
+                        speedMultiplier={2}
+                      />
+                      <h2>Uploading...</h2>
+                    </div>
+                  ) : null}
+
                   <div className="apartment-form-body">
-                    <div className="form-btn-group">
+                    <div className="apartment-head">
+                      <div className="apartment-img">
+                        <img src={preview} alt={form.fullAddress} />
+                      </div>
+                    </div>
+                    <div className="apartment-body">
+                      <div className="apartment-body-top">
+                        <h3>{form.shortAddress}</h3>
+                      </div>
+                      <div className="apartment-main-detail">
+                        <div className="apartment-main-detail-row">
+                          <span>Address: </span>
+                          <p>{form.fullAddress}</p>
+                        </div>
+                        <div className="apartment-main-detail-row">
+                          <span>Price: </span>
+                          <p className="price">
+                            {form.price} sum/
+                            {form.duration === "Kunlik" ? "kun" : "ayina"}
+                          </p>
+                        </div>
+                        <div className="apartment-main-detail-row">
+                          <span>For: </span>
+                          <p>{form.forWhom}</p>
+                        </div>
+                        <div className="apartment-main-detail-row">
+                          <span>Rooms: </span>
+                          <p>{form.rooms}</p>
+                        </div>
+                        <div className="apartment-main-detail-row">
+                          <span>Phone: </span>
+                          <p className="phone">{form.phone1}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="form-btn-group form-buttons">
                       <button
                         type="button"
                         onClick={() => setStep((prev) => prev - 1)}
                       >
                         Back
                       </button>
-                      <button type="submit">Next</button>
+                      <button type="submit">Upload</button>
                     </div>
                   </div>
                 </form>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./auth.css";
 import emailSvg from "../utils/icons/email.svg";
 import passwordSvg from "../utils/icons/password.svg";
@@ -14,6 +14,11 @@ const Login = () => {
   const [form, setForm] = useState({ phone: "", password: "" });
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
+  const phoneInputRef = useRef();
+
+  useEffect(() => {
+    phoneInputRef.current.focus();
+  }, []);
   if (isAuthenticated) return <Navigate to={"/"} />;
 
   const handleChange = (e) => {
@@ -60,17 +65,16 @@ const Login = () => {
       const response = await axios.post(localURL + "/auth/login", form);
       setLoading(false);
       localStorage.setItem("access-token", response?.data?.token);
-      console.log(response?.data?.message);
+
       dispatch(
         setAlert({
-          text: response?.data?.message,
+          text: response.data.message,
           active: true,
           type: "success",
         })
       );
       dispatch(setAuthenticated(true));
     } catch (error) {
-      console.log(error?.response?.data?.message);
       setLoading(false);
       dispatch(
         setAlert({
@@ -109,6 +113,7 @@ const Login = () => {
               placeholder="+998 99 999 99 99"
               maxLength={13}
               minLength={13}
+              ref={phoneInputRef}
               onChange={handleChange}
               onFocus={() => {
                 if (form.phone === "") {

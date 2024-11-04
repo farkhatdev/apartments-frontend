@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Apartment from "./Apartment";
 import "./apartments.css";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAlert } from "../../store/slices/uiSlice";
@@ -40,16 +39,8 @@ const Apartments = () => {
             <h2>Apartments in Nukus</h2>
           </div>
           <div className="apartments-result">
-            {data.map((apartment) => {
-              return (
-                <Link
-                  key={apartment.id}
-                  className="apartment-link"
-                  to={`/apartments/${apartment.id}`}
-                >
-                  <Apartment apartment={apartment} />
-                </Link>
-              );
+            {data.map((apartment, index) => {
+              return <Apartment key={index} apartment={apartment} />;
             })}
           </div>
         </div>

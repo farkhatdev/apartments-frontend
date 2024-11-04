@@ -1,4 +1,4 @@
-import React, {  useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
 import { BsClockHistory } from "react-icons/bs";
@@ -16,10 +16,21 @@ const Sidebar = () => {
   const iconSize = 22;
   const sidebarRef = useRef();
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        dispatch(setSidebar(false));
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dispatch]);
 
   return (
-    <div className={`sidebar ${isActive ? "active" : null}`}>
-      <ul ref={sidebarRef}>
+    <div className={`sidebar ${isActive ? "active" : null}`} ref={sidebarRef}>
+      <ul>
         <Link to={"/apartments"} onClick={handleSidebar}>
           <li>
             <div className="sidebar-icon">

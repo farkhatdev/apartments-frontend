@@ -60,7 +60,7 @@
   transition: border 0.2s;
 }
 .form-group input:focus {
-  border: 1px solid blueviolet;
+  border: 1px solid #8a2be2;
   transition: border 0.2s;
 }
 

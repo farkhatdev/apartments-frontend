@@ -40,7 +40,7 @@
 }
 .logo-img img {
   user-select: none;
-  width: 45px;
+  width: 120px;
   height: 45px;
 }
 .search-bar {
@@ -132,6 +132,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #fff;
+  border-radius: 50%;
+  background-color: rgb(254, 71, 233);
 }
 .profile .profile-img img {
   width: 100%;

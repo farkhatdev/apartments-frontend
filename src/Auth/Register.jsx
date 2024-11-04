@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./auth.css";
 import emailSvg from "../utils/icons/email.svg";
 import personSvg from "../utils/icons/person-svg.svg";
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAlert } from "../store/slices/uiSlice";
 import { setAuthenticated } from "../store/slices/authSlice";
 
-const Register = ({ setIsAuthenticated }) => {
+const Register = () => {
   const [step, setStep] = useState(1);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -25,6 +25,11 @@ const Register = ({ setIsAuthenticated }) => {
     confirmPasword: "",
     verifyCode: "",
   });
+  const nameInputRef = useRef();
+
+  useEffect(() => {
+    nameInputRef.current.focus();
+  }, []);
 
   useEffect(() => {
     setForm((prev) => ({ ...prev, verifyCode: "" }));
@@ -32,7 +37,6 @@ const Register = ({ setIsAuthenticated }) => {
 
   if (isAuthenticated) return <Navigate to={"/"} />;
   let localURL = "http://localhost:8080";
-  // let URL = "https://apartment-gr2i0orv.b4a.run";
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -121,7 +125,6 @@ const Register = ({ setIsAuthenticated }) => {
     <div className="register auth-page container">
       {step === 1 ? (
         <form action="" onSubmit={handleSubmit} className="form">
-          <span className="step">{step} / 2</span>
           <div className="form-heading">
             <h2>Welcome, Create your account</h2>
           </div>
@@ -143,6 +146,7 @@ const Register = ({ setIsAuthenticated }) => {
                 placeholder="Name"
                 value={form.name}
                 type="text"
+                ref={nameInputRef}
                 onChange={handleChange}
                 autoComplete="off"
                 required
@@ -237,17 +241,12 @@ const Register = ({ setIsAuthenticated }) => {
         </form>
       ) : step === 2 ? (
         <form className="form" onSubmit={handleSubmit}>
-          <span className="step">{step} / 2</span>
           <div className="form-heading">
             <h2>Verify your phone number</h2>
           </div>
           <p>
             Your OTP: <b>{otp}</b>
           </p>
-          {/* <p>
-            {min.length >= 2 ? min : "0" + min}:
-            {sec.length >= 2 ? sec : "0" + sec}
-          </p> */}
           <div className="form-body">
             <p
               style={{
