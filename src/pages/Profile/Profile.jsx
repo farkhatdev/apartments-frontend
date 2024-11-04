@@ -6,7 +6,6 @@ import Apartment from "../Apartments/Apartment";
 import { jwtDecode } from "jwt-decode";
 import { setAlert } from "../../store/slices/uiSlice";
 import { useDispatch } from "react-redux";
-let localURL = "http://localhost:8080/";
 
 const NoData = ({ isArchived }) => {
   return (
@@ -19,6 +18,7 @@ const NoData = ({ isArchived }) => {
   );
 };
 
+let publicURL = "https://apartments-ndwwo6ny.b4a.run";
 const Profile = () => {
   const accessToken = localStorage.getItem("access-token");
   const [archivedApartments, setArchivedApartments] = useState([]);
@@ -85,7 +85,7 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(localURL + "my-profile", {
+        const response = await axios.get(publicURL + "/my-profile", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

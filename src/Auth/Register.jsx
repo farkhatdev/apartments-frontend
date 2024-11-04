@@ -36,7 +36,7 @@ const Register = () => {
   }, [step]);
 
   if (isAuthenticated) return <Navigate to={"/"} />;
-  let localURL = "http://localhost:8080";
+  let publicURL = "https://apartments-ndwwo6ny.b4a.run";
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -71,7 +71,7 @@ const Register = () => {
           return;
         }
         setLoading(true);
-        const response = await axios.post(localURL + "/auth/register", form);
+        const response = await axios.post(publicURL + "/auth/register", form);
 
         dispatch(
           setAlert({
@@ -96,7 +96,7 @@ const Register = () => {
     } else if (step === 2) {
       try {
         setLoading(true);
-        let response = await axios.post(localURL + "/auth/verify-code", form);
+        let response = await axios.post(publicURL + "/auth/verify-code", form);
         localStorage.setItem("access-token", response?.data?.token);
         dispatch(setAuthenticated(true));
         dispatch(

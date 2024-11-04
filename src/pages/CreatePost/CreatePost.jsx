@@ -45,7 +45,7 @@ const CreatePost = () => {
     owner: "124",
   });
   const accessToken = localStorage.getItem("access-token");
-  let localURL = "http://localhost:8080";
+  let publicURL = "https://apartments-ndwwo6ny.b4a.run";
   // Refs
   const inputImgRef = useRef();
   const forWhomRef = useRef();
@@ -146,7 +146,7 @@ const CreatePost = () => {
         const formData = new FormData();
         images.map((image) => formData.append("images", image));
         formData.append("info", JSON.stringify(form));
-        const response = await axios.post(localURL + "/apartment", formData, {
+        const response = await axios.post(publicURL + "/apartment", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${accessToken}`,

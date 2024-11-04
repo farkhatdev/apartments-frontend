@@ -52,8 +52,8 @@ const Login = () => {
     }
   };
   const handleSubmit = async (e) => {
-    let localURL = "http://localhost:8080";
-    // let URL = "https://apartment-gr2i0orv.b4a.run";
+    // let localURL = "http://localhost:8080";
+    let publicURL = "https://apartments-ndwwo6ny.b4a.run";
     try {
       e.preventDefault();
       const { phone, password } = form;
@@ -62,7 +62,7 @@ const Login = () => {
         return;
       }
       setLoading(true);
-      const response = await axios.post(localURL + "/auth/login", form);
+      const response = await axios.post(publicURL + "/auth/login", form);
       setLoading(false);
       localStorage.setItem("access-token", response?.data?.token);
 

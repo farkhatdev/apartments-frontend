@@ -8,12 +8,11 @@ import { setAlert } from "../../store/slices/uiSlice";
 const Apartments = () => {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
-  // let publicURL = "https://apartment-gr2i0orv.b4a.run";
   useEffect(() => {
-    let localURL = "http://localhost:8080";
+    let publicURL = "https://apartments-ndwwo6ny.b4a.run";
     async function fetchData() {
       try {
-        const response = await axios.get(localURL + "/apartment", {
+        const response = await axios.get(publicURL + "/apartment", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access-token")}`,
           },
