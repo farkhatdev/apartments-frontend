@@ -10,7 +10,7 @@ import addressSvg from "../../utils/icons/address.svg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAlert } from "../../store/slices/uiSlice";
-import { YMaps, Map, Placemark } from "react-yandex-maps";
+// import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { ClockLoader } from "react-spinners";
 import { Navigate } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const CreatePost = () => {
   const [images, setImages] = useState([]);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [place, setPlace] = useState([42.442987, 59.617839]);
+  const [place] = useState([42.442987, 59.617839]);
   const [activeOptionForWhom, setActiveOptionForWhom] = useState(false);
   const [activeOptionDuration, setOptionDuration] = useState(false);
   const [optionsDuration] = useState(["Uzaq muddetli", "Kunlik"]);
@@ -540,7 +540,7 @@ const CreatePost = () => {
                     className="map"
                     style={{ width: "100%", height: "400px" }}
                   >
-                    <YMaps
+                    {/* <YMaps
                       query={{ apikey: "d52c0095-ba4c-4140-8e30-f74f9f2703a3" }}
                     >
                       <Map
@@ -563,7 +563,8 @@ const CreatePost = () => {
                           }
                         />
                       </Map>
-                    </YMaps>
+                    </YMaps> */}
+                    Yandex Maps
                   </div>
                   <div className="form-btn-group form-buttons">
                     <button
