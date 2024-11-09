@@ -17,7 +17,6 @@ import { Navigate } from "react-router-dom";
 const CreatePost = () => {
   // States
   const [images, setImages] = useState([]);
-  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [place] = useState([42.442987, 59.617839]);
   const [activeOptionForWhom, setActiveOptionForWhom] = useState(false);
@@ -201,7 +200,6 @@ const CreatePost = () => {
               <div className="posting-apartment-images">
                 {images.map((image, index) => {
                   let url = URL.createObjectURL(image);
-                  if (preview === null) setPreview(url);
                   return (
                     <div key={index} className="posting-apartment-image">
                       <img src={url} alt="" width={200} height={200} />
@@ -595,7 +593,10 @@ const CreatePost = () => {
                   <div className="apartment-form-body">
                     <div className="apartment-head">
                       <div className="apartment-img">
-                        <img src={preview} alt={form.fullAddress} />
+                        <img
+                          src={URL.createObjectURL(images[0])}
+                          alt={form.fullAddress}
+                        />
                       </div>
                     </div>
                     <div className="apartment-body">
