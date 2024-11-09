@@ -52,7 +52,7 @@ const Login = () => {
     }
   };
   const handleSubmit = async (e) => {
-    let publicURL = "http://localhost:8080";
+    let publicURL = "https://farkhat-98p2gtql.b4a.run";
     try {
       e.preventDefault();
       const { phone, password } = form;

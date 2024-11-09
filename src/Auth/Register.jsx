@@ -36,7 +36,7 @@ const Register = () => {
   }, [step]);
 
   if (isAuthenticated) return <Navigate to={"/"} />;
-  let publicURL = "http://localhost:8080";
+  let publicURL = "https://farkhat-98p2gtql.b4a.run";
 
   const handleChange = (e) => {
     let value = e.target.value;

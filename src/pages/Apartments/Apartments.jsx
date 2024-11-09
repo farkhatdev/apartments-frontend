@@ -9,7 +9,7 @@ const Apartments = () => {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
-    let publicURL = "http://localhost:8080";
+    let publicURL = "https://farkhat-98p2gtql.b4a.run";
     async function fetchData() {
       try {
         const response = await axios.get(publicURL + "/apartment", {
