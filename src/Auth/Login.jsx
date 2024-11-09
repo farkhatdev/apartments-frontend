@@ -52,8 +52,7 @@ const Login = () => {
     }
   };
   const handleSubmit = async (e) => {
-    // let localURL = "http://localhost:8080";
-    let publicURL = "https://apartments-ndwwo6ny.b4a.run";
+    let publicURL = "http://localhost:8080";
     try {
       e.preventDefault();
       const { phone, password } = form;

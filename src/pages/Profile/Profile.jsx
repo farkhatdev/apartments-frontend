@@ -18,7 +18,7 @@ const NoData = ({ isArchived }) => {
   );
 };
 
-let publicURL = "https://apartments-ndwwo6ny.b4a.run";
+let publicURL = "http://localhost:8080";
 const Profile = () => {
   const accessToken = localStorage.getItem("access-token");
   const [archivedApartments, setArchivedApartments] = useState([]);
@@ -33,7 +33,7 @@ const Profile = () => {
 
   const deleteApartment = async (id) => {
     try {
-      const response = await axios.delete(localURL + `apartment/${id}`, {
+      const response = await axios.delete(publicURL + `/apartment/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -63,7 +63,7 @@ const Profile = () => {
     try {
       setLoading(true);
       await axios.put(
-        localURL + `apartment/archive/${id}`,
+        publicURL + `/apartment/archive/${id}`,
         { action: !action },
         {
           headers: {
@@ -170,7 +170,7 @@ const Profile = () => {
                                   )
                                 }
                               >
-                                Archive
+                                Unarchive
                               </button>
                             </div>
                           }
@@ -198,7 +198,7 @@ const Profile = () => {
                                 )
                               }
                             >
-                              Unarchive
+                              Archive
                             </button>
                           </div>
                         }

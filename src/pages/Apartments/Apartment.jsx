@@ -85,7 +85,7 @@ const Apartment = ({ apartment, deleteApartment, action }) => {
       ) : null}
       <div className="apartment-head">
         <div className="apartment-img">
-          <img src={images[0]} alt={fullAddress} />
+          <img src={images[1]} alt={fullAddress} />
         </div>
       </div>
       <div className="apartment-body">

@@ -36,7 +36,7 @@ const Register = () => {
   }, [step]);
 
   if (isAuthenticated) return <Navigate to={"/"} />;
-  let publicURL = "https://apartments-ndwwo6ny.b4a.run";
+  let publicURL = "http://localhost:8080";
 
   const handleChange = (e) => {
     let value = e.target.value;

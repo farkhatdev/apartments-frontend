@@ -10,7 +10,7 @@ import addressSvg from "../../utils/icons/address.svg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAlert } from "../../store/slices/uiSlice";
-import { YMaps, Map, Placemark } from "react-yandex-maps";
+// import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { ClockLoader } from "react-spinners";
 import { Navigate } from "react-router-dom";
 
@@ -45,7 +45,7 @@ const CreatePost = () => {
     owner: "124",
   });
   const accessToken = localStorage.getItem("access-token");
-  let publicURL = "https://apartments-ndwwo6ny.b4a.run";
+  let publicURL = "http://localhost:8080";
   // Refs
   const inputImgRef = useRef();
   const forWhomRef = useRef();
@@ -539,32 +539,7 @@ const CreatePost = () => {
                   <div
                     className="map"
                     style={{ width: "100%", height: "400px" }}
-                  >
-                    <YMaps
-                      query={{ apikey: "d52c0095-ba4c-4140-8e30-f74f9f2703a3" }}
-                    >
-                      <Map
-                        defaultState={{
-                          center: place,
-                          zoom: 16,
-                          type: "yandex#map",
-                        }}
-                        modules={["control.TypeSelector"]}
-                        width={"100%"}
-                        height={"100%"}
-                      >
-                        <Placemark
-                          geometry={place}
-                          options={{
-                            draggable: true,
-                          }}
-                          onDragEnd={(e) =>
-                            setPlace(e.get("target").geometry.getCoordinates())
-                          }
-                        />
-                      </Map>
-                    </YMaps>
-                  </div>
+                  ></div>
                   <div className="form-btn-group form-buttons">
                     <button
                       type="button"

@@ -172,9 +172,8 @@ button.logout-btn:hover {
   transition: background-color 0.3s;
 }
 @media (max-width: 500px) {
-  .logo-img img {
-    width: 40px;
-    height: 40px;
+  .logo-img {
+    display: none;
   }
   .profile {
     margin: 0;
